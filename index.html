@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Argentine Airports on Google Maps</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Argentine Airports</h1>
+            <p>Click on any marker to see airport details</p>
+        </header>
+        
+        <div class="content">
+            <div class="sidebar">
+                <h3>Airport List</h3>
+                <ul id="airport-list" class="airport-list">
+                    <!-- Airport list will be populated by JavaScript -->
+                </ul>
+            </div>
+            
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="airports-data2.js"></script>
+    <script src="script.js"></script>
+    <!-- Replace YOUR_API_KEY with your actual Google Maps API key -->
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDid58dkDO2xVTVfc997hBAS5KTdgS42XI&callback=initMap">
+    </script>
+</body>
+</html>

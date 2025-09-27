@@ -1,0 +1,125 @@
+// Major world airports data
+// This file contains the hardcoded list of airports to be displayed on the map
+
+const airports = [
+    {
+        name: "Hartsfield-Jackson Atlanta International Airport",
+        code: "ATL",
+        country: "United States",
+        city: "Atlanta",
+        lat: 33.6367,
+        lng: -84.4281
+    },
+    {
+        name: "Los Angeles International Airport",
+        code: "LAX",
+        country: "United States",
+        city: "Los Angeles",
+        lat: 33.9425,
+        lng: -118.4081
+    },
+    {
+        name: "Dubai International Airport",
+        code: "DXB",
+        country: "United Arab Emirates",
+        city: "Dubai",
+        lat: 25.2532,
+        lng: 55.3657
+    },
+    {
+        name: "Tokyo Haneda Airport",
+        code: "HND",
+        country: "Japan",
+        city: "Tokyo",
+        lat: 35.5494,
+        lng: 139.7798
+    },
+    {
+        name: "London Heathrow Airport",
+        code: "LHR",
+        country: "United Kingdom",
+        city: "London",
+        lat: 51.4700,
+        lng: -0.4543
+    },
+    {
+        name: "Paris Charles de Gaulle Airport",
+        code: "CDG",
+        country: "France",
+        city: "Paris",
+        lat: 49.0097,
+        lng: 2.5479
+    },
+    {
+        name: "Amsterdam Airport Schiphol",
+        code: "AMS",
+        country: "Netherlands",
+        city: "Amsterdam",
+        lat: 52.3086,
+        lng: 4.7639
+    },
+    {
+        name: "Frankfurt Airport",
+        code: "FRA",
+        country: "Germany",
+        city: "Frankfurt",
+        lat: 50.0379,
+        lng: 8.5622
+    },
+    {
+        name: "Singapore Changi Airport",
+        code: "SIN",
+        country: "Singapore",
+        city: "Singapore",
+        lat: 1.3644,
+        lng: 103.9915
+    },
+    {
+        name: "Seoul Incheon International Airport",
+        code: "ICN",
+        country: "South Korea",
+        city: "Seoul",
+        lat: 37.4602,
+        lng: 126.4407
+    },
+    {
+        name: "Beijing Capital International Airport",
+        code: "PEK",
+        country: "China",
+        city: "Beijing",
+        lat: 40.0799,
+        lng: 116.6031
+    },
+    {
+        name: "John F. Kennedy International Airport",
+        code: "JFK",
+        country: "United States",
+        city: "New York",
+        lat: 40.6413,
+        lng: -73.7781
+    },
+    {
+        name: "Hong Kong International Airport",
+        code: "HKG",
+        country: "Hong Kong",
+        city: "Hong Kong",
+        lat: 22.3080,
+        lng: 113.9185
+    },
+    {
+        name: "Sydney Kingsford Smith Airport",
+        code: "SYD",
+        country: "Australia",
+        city: "Sydney",
+        lat: -33.9399,
+        lng: 151.1753
+    },
+    {
+        name: "São Paulo/Guarulhos International Airport",
+        code: "GRU",
+        country: "Brazil",
+        city: "São Paulo",
+        lat: -23.4356,
+        lng: -46.4731
+    }
+];
