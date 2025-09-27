@@ -198,8 +198,96 @@ function populateAirportList(airportsList) {
             listItem.style.backgroundColor = '#e3f2fd';
         });
 
+        // Add hover events to highlight airport and routes on map
+        listItem.addEventListener('mouseenter', () => {
+            highlightAirportAndRoutes(airport, index, true);
+        });
+
+        listItem.addEventListener('mouseleave', () => {
+            highlightAirportAndRoutes(airport, index, false);
+        });
+
         airportList.appendChild(listItem);
     });
+}
+
+// Highlight airport marker and associated routes on hover
+function highlightAirportAndRoutes(airport, markerIndex, highlight) {
+    const marker = markers[markerIndex];
+    const isOrigin = airport.icao === originAirport;
+    const isDestination = destinationAirports.includes(airport.icao);
+    
+    if (highlight) {
+        // Scale up the marker
+        marker.setIcon({
+            url: marker.getIcon().url,
+            scaledSize: new google.maps.Size(48, 48), // Larger size
+            anchor: new google.maps.Point(24, 24)
+        });
+        
+        // Highlight associated flight paths
+        if (isOrigin) {
+            // If hovering over origin, highlight all outbound routes
+            flightPaths.forEach(path => {
+                path.setOptions({
+                    strokeWeight: 5,
+                    strokeOpacity: 1.0,
+                    strokeColor: '#c0392b' // Darker red
+                });
+            });
+        } else if (isDestination) {
+            // If hovering over destination, highlight the route from origin to this destination
+            const originAirportData = getSpecificAirports().find(a => a.icao === originAirport);
+            if (originAirportData) {
+                flightPaths.forEach(path => {
+                    const pathCoordinates = path.getPath().getArray();
+                    // Check if this path connects to the hovered destination
+                    if (pathCoordinates.length === 2) {
+                        const destLat = pathCoordinates[1].lat();
+                        const destLng = pathCoordinates[1].lng();
+                        if (Math.abs(destLat - airport.lat) < 0.01 && Math.abs(destLng - airport.lon) < 0.01) {
+                            path.setOptions({
+                                strokeWeight: 5,
+                                strokeOpacity: 1.0,
+                                strokeColor: '#c0392b' // Darker red
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    } else {
+        // Reset marker to normal size
+        const isOriginMarker = airport.icao === originAirport;
+        const isDestinationMarker = destinationAirports.includes(airport.icao);
+        
+        let markerColor = '#3498db'; // Default blue
+        if (isOriginMarker) {
+            markerColor = '#e74c3c'; // Red for origin
+        } else if (isDestinationMarker) {
+            markerColor = '#27ae60'; // Green for destinations
+        }
+        
+        marker.setIcon({
+            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="12" fill="${markerColor}" stroke="#2c3e50" stroke-width="2"/>
+                    <text x="16" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">✈</text>
+                </svg>
+            `),
+            scaledSize: new google.maps.Size(32, 32),
+            anchor: new google.maps.Point(16, 16)
+        });
+        
+        // Reset all flight paths to normal
+        flightPaths.forEach(path => {
+            path.setOptions({
+                strokeWeight: 3,
+                strokeOpacity: 0.8,
+                strokeColor: '#e74c3c' // Original red
+            });
+        });
+    }
 }
 
 // Handle map loading errors

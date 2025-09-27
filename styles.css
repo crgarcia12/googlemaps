@@ -79,6 +79,8 @@ header p {
 .airport-list li:hover {
     background: #e3f2fd;
     transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    transition: all 0.3s ease;
 }
 
 .airport-name {
@@ -112,10 +114,12 @@ header p {
 
 .origin-airport:hover {
     background: linear-gradient(to right, #fce4ec, #e3f2fd) !important;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3) !important;
 }
 
 .destination-airport:hover {
     background: linear-gradient(to right, #e8f5e8, #e3f2fd) !important;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3) !important;
 }
 
 /* Map container styles */
