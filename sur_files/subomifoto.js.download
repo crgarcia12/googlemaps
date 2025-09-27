@@ -1,0 +1,45 @@
+$uploadCrop = $('#upload-demo').croppie({
+    enableExif: true,
+    viewport: {
+        width: 270,
+        height: 270,
+        type: 'square'
+    },
+    boundary: {
+        width: 350,
+        height: 350
+    }
+});
+
+
+$('#upload').on('change', function () { 
+	var reader = new FileReader();
+    reader.onload = function (e) {
+    	$uploadCrop.croppie('bind', {
+    		url: e.target.result
+    	}).then(function(){
+    		console.log('jQuery bind complete');
+    	});
+    	
+    }
+    reader.readAsDataURL(this.files[0]);
+});
+
+
+$('.upload-result').on('click', function (ev) {
+	var pilot_id = $('#pilot_id').val();
+	$uploadCrop.croppie('result', {
+		type: 'canvas',
+		size: 'viewport'
+	}).then(function (resp) {
+		$.ajax({
+			url: "./model/model_subomifoto.php",
+			type: "POST",
+			data: {"image":resp,pilot_id},
+			success: function (data) {
+				html = '<img src="' + resp + '" />';
+				$("#upload-demo-i").html(html);
+			}
+		});
+	});
+});

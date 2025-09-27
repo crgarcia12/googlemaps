@@ -1,0 +1,15 @@
+$('.buscarAeropuerto').select2({
+    placeholder: 'Buscar aeropuerto',
+    minimumInputLength: 2,
+    ajax: {
+      url: 'ajax.php',
+      dataType: 'json',
+      delay: 250,
+      processResults: function (data) {
+        return {        
+          results: data,
+        };
+      }
+     
+    }
+  });

@@ -1,0 +1,54 @@
+/*
+Name: 			Tables / Advanced - Examples
+Written by: 	Okler Themes - (http://www.okler.net)
+Theme Version: 	2.0.0
+*/
+
+(function($) {
+
+	'use strict';
+
+	var datatableInit = function() {
+
+		$('#datatable-default').dataTable({
+			"language": 
+			{
+							"sProcessing":     "Procesando...",
+							"sLengthMenu":     "Mostrar _MENU_ registros",
+							"sZeroRecords":    "No se encontraron resultados",
+							"sEmptyTable":     "Ningún dato disponible en esta tabla =(",
+							"sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+							"sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+							"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+							"sInfoPostFix":    "",
+							"sUrl":            "",
+							"sInfoThousands":  ",",
+							"sSearchPlaceholder": "Buscar...",
+							"sLoadingRecords": "Cargando...",
+							"oPaginate": {
+								"sFirst":    "Primero",
+								"sLast":     "Último",
+								"sNext":     "Siguiente",
+								"sPrevious": "Anterior"
+							},
+							"oAria": {
+								"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+								"sSortDescending": ": Activar para ordenar la columna de manera descendente"
+							},
+							"buttons": {
+								"copy": "Copiar",
+								"colvis": "Visibilidad"
+							}
+			},
+			dom: '<"row"<"col-lg-6"l><"col-lg-6"f>><"table-responsive"t>p',
+			"pageLength": 25,
+			
+		});
+
+	};
+
+	$(function() {
+		datatableInit();
+	});
+
+}).apply(this, [jQuery]);

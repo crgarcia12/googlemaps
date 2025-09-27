@@ -1,0 +1,31 @@
+/* Add here all your JS customizations *//*
+Gauge: Basic
+*/
+    (function() {
+        if( $('#valoracion').get(0) ) {
+          var target = $('#valoracion'),
+            opts = $.extend(true, {}, {
+              lines: 12, // The number of lines to draw
+              angle: 0.12, // The length of each line
+              lineWidth: 0.5, // The line thickness
+              pointer: {
+                length: 0.7, // The radius of the inner circle
+                strokeWidth: 0.05, // The rotation offset
+                color: '#383838' // Fill color
+              },
+              limitMax: 'true', // If true, the pointer will not go past the end of the gauge
+              percentColors: [[0.0, "#ff0000" ], [0.50, "#ed9c28"], [1.0, "#05e00a"]],
+              strokeColor: '#F1F1F1', // to see which ones work best for you
+              generateGradient: true
+            }, target.data('plugin-options'));
+            
+    
+        var gauge = new Gauge(target.get(0)).setOptions(opts);
+    
+          gauge.maxValue = opts.maxValue; // set max gauge value
+          gauge.animationSpeed = 32; // set animation speed (32 is default value)
+          gauge.set(opts.value); // set actual value
+          gauge.setTextField(document.getElementById("valoracionTexto"));
+          
+        }
+      })();

@@ -1,0 +1,202 @@
+//funcion que deshabilita boton de eliminar despacho
+function deshabilitarBotonSiPHPDevuelveTrue() {
+  // Realiza la llamada AJAX a la función PHP
+  fetch('./v4/services/verificarEstado.php')
+      .then(response => response.json())
+      .then(data => {
+          if (data === true) {
+              document.getElementById('eliminarDespacho').disabled = true;
+          }
+      })
+      .catch(error => console.error('Error:', error));
+}
+
+// Llama a la función inmediatamente cuando la página cargue
+window.onload = deshabilitarBotonSiPHPDevuelveTrue;
+
+// Configura la función para que corra cada 5 minutos (300,000 milisegundos)
+setInterval(deshabilitarBotonSiPHPDevuelveTrue, 300000); // 300,000 milisegundos = 5 minutos
+
+
+$.extend(theme.PluginDatePicker.defaults, {
+  format: "dd/mm/yyyy"
+});
+
+
+$("#formalta").validate({
+  errorContainer: "#messageBox1",
+  errorLabelContainer: "#messageBox1",
+  wrapper: "li",
+  rules: {
+    contrasena: {
+      required: true,
+      minlength: 5
+    },
+    contrasena2: {
+      equalTo: "#contrasena"
+    },
+    nombre: "required",
+    email: {
+      required: true,
+      email: true
+    },
+    apellido: "required",
+    fechanac: "required",
+    email2: {
+      equalTo: "#email"
+    },
+    ciudad: "required",
+    provincia: "required",
+    pais: "required",
+    acepto: "required"
+  },
+  messages: {
+    nombre: "Cual es tu nombre?",
+    email: "Cual es tu email?",
+    apellido: "Cual es tu apellido?",
+    fechanac: "Cual es tu fecha de Nacimiento?",
+    email2: "Repetí tu email!",
+    ciudad: "En que ciudad vivis?",
+    provincia: "En que provincia vivis?",
+    pais: "En que país vivis?",
+    contrasena: {
+      required: "Elegí tu contraseña!",
+      minlength: "Tu clave debe tener minimo 5 caracteres!"
+    },
+    contrasena2: "Repetí tu contraseña!",
+    acepto: "Aceptas nuestras reglas?"
+  },
+  submitHandler: function (form) {
+    form.submit();
+  }
+
+});
+
+$("#formmiperfil").validate({
+  errorContainer: "#messageBox1",
+  errorLabelContainer: "#messageBox1",
+  rules: {
+    newpassword: {
+      minlength: 5
+    },
+    newpassword_1: {
+      equalTo: "#newpassword"
+    },
+    email: {
+      required: true,
+      email: true
+    },
+    fechanac: "required",
+    ciudad: "required",
+    provincia: "required",
+    pais: "required",
+  },
+  messages: {
+    email: "Cual es tu email?",
+    fechanac: "Cual es tu fecha de Nacimiento?",
+    ciudad: "En que ciudad vivis?",
+    provincia: "En que provincia vivis?",
+    pais: "En que país vivis?",
+    newpassword: {
+      minlength: "Tu clave debe tener minimo 5 caracteres!"
+    },
+    newpassword_1: "Repetí tu contraseña!"
+  },
+  submitHandler: function (form) {
+    form.submit();
+  }
+
+});
+
+$("#formpirep").validate({
+  errorContainer: "#messageBox1",
+  errorLabelContainer: "#messageBox1",
+  wrapper: "li",
+  rules: {
+    requeridodate: "required",
+    requeridotipo_vuelo: "required",
+    requeridoregistration: "required",
+    requeridoorigin_id: "required",
+    requeridodestination_id: "required",
+    requeridowaypoints: "required",
+    requeridonivel_vuelo: "required",
+    requeridopax: "required",
+    requeridocarga: "required",
+    requeridoduration: "required",
+    requeridofuel: "required",
+    requeridodistance: "required"
+  },
+  messages: {
+    requeridodate: "Completá la fecha del vuelo",
+    requeridotipo_vuelo: "Elegií el tipo de vuelo",
+    requeridoregistration: "Selecciona la aeronave utilizada",
+    requeridoorigin_id: "Ingresa el aeropuerto Origen. Ejemplo: SABE",
+    requeridodestination_id: "Ingresa el aeropuerto Destino. Ejemplo: SACO",
+    requeridowaypoints: "Ingresá la ruta de vuelo",
+    requeridonivel_vuelo: "Ingresá el nivel de vuelo",
+    requeridopax: "Ingresá la cantidad de pasajeros transportados",
+    requeridocarga: "Ingresá la carga paga transportada",
+    requeridoduration: "Indicá la duracioón de vuelo en el formato HH:MM",
+    requeridofuel: "Ingresá el combustible quemado en el vuelo",
+    requeridodistance: "Indicá la distancia recorrida"
+  },
+  submitHandler: function (form) {
+    form.submit();
+  }
+
+});
+
+// Plan vuelo integracion RouteFinder
+$('#botonplanvuelo').click(function () {
+  $(this).prop('disabled', true);
+  var origenVal = $("#origen").val();
+  var destinoVal = $("#destino").val();
+  var flVal = $("#nivel_vuelo").val();
+
+  if (flVal == null) {
+    $("#nivel_vuelo").focus();
+    $('#botonplanvuelo').prop('disabled', false);
+  }
+  else {
+    $.ajax({
+      type: 'GET',
+      url: 'plan_vuelo.php',
+      data: { origen: origenVal, destino: destinoVal, nivelvuelo: flVal},
+      success: function (data) {
+        // If you want, alert whatever your PHP script outputs modalPlanvuelo
+        
+        $('#plan_vuelo').val(data),
+        $("#plan_vuelo").focus();
+        
+        $('#botonplanvuelo').prop('disabled', false);
+      }
+    });
+    return false;
+  }
+});
+
+$("#formpassword").validate({
+  errorContainer: "#messageBox1",
+  errorLabelContainer: "#messageBox1",
+  wrapper: "p",
+  rules: {
+    password: {
+      required: true,
+      minlength: 5
+    },
+    password2: {
+      equalTo: "#password"
+    },
+  },
+  messages: {
+    password: {
+      required: "Elegí tu contraseña!",
+      minlength: "Tu clave debe tener minimo 5 caracteres!"
+    },
+    password2: "Debes ingresar la misma clave en ambos campos!",
+  },
+  submitHandler: function (form) {
+    form.submit();
+  }
+
+});
