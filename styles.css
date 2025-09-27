@@ -99,6 +99,25 @@ header p {
     margin-top: 2px;
 }
 
+/* Origin and destination airport styling */
+.origin-airport {
+    border-left: 3px solid #e74c3c !important;
+    background: linear-gradient(to right, #fdf2f2, #f8f9fa) !important;
+}
+
+.destination-airport {
+    border-left: 3px solid #27ae60 !important;
+    background: linear-gradient(to right, #f2fdf2, #f8f9fa) !important;
+}
+
+.origin-airport:hover {
+    background: linear-gradient(to right, #fce4ec, #e3f2fd) !important;
+}
+
+.destination-airport:hover {
+    background: linear-gradient(to right, #e8f5e8, #e3f2fd) !important;
+}
+
 /* Map container styles */
 .map-container {
     flex: 1;

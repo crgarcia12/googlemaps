@@ -1,38 +1,40 @@
 // Airport data is imported from airports-data2.js
-// The airports array is now defined in a separate file for better organization
-// Filter airports to show only those from Argentina
+// Show specific airports with origin and destinations
 
-// Convert the airports object to an array and filter for Argentina
-let argentineAirports = [];
+// Configuration for airports and routes
+const originAirport = 'SAAV'; // Origin airport ICAO code
+const destinationAirports = ['SABE', 'SUMU', 'SACO', 'SAAR']; // Destination airport ICAO codes
 
-// Process airports data once it's loaded
-function processAirportData() {
+// Get specific airports by ICAO codes
+function getSpecificAirports() {
     if (typeof airports !== 'undefined' && airports.length > 0) {
-        // airports is an array with one object containing all airport data
         const airportsData = airports[0];
-        argentineAirports = Object.values(airportsData).filter(airport => 
-            airport.country === 'AR' && 
-            airport.lat && 
-            airport.lon && 
-            airport.name
-        );
-        console.log(`Found ${argentineAirports.length} airports in Argentina`);
+        const allCodes = [originAirport, ...destinationAirports];
+        
+        const selectedAirports = allCodes
+            .map(icao => airportsData[icao])
+            .filter(airport => airport && airport.lat && airport.lon && airport.name);
+        
+        console.log(`Found ${selectedAirports.length} out of ${allCodes.length} specified airports`);
+        return selectedAirports;
     }
+    return [];
 }
 
 let map;
 let markers = [];
 let infoWindow;
+let flightPaths = []; // Store flight path polylines
 
 // Initialize the Google Map
 function initMap() {
-    // Process airport data first
-    processAirportData();
+    // Get specific airports
+    const selectedAirports = getSpecificAirports();
     
-    // Create map centered on Argentina
+    // Create map centered on South America
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 5,
-        center: { lat: -35.0, lng: -64.0 }, // Centered on Argentina
+        zoom: 4,
+        center: { lat: -15.0, lng: -60.0 }, // Centered on South America
         mapTypeId: 'terrain',
         styles: [
             {
@@ -51,24 +53,39 @@ function initMap() {
     // Create info window
     infoWindow = new google.maps.InfoWindow();
 
-    // Add markers for all Argentine airports
-    addAirportMarkers();
+    // Add markers for all airports
+    addAirportMarkers(selectedAirports);
+
+    // Draw flight paths from origin to destinations
+    drawFlightPaths(selectedAirports);
 
     // Populate airport list in sidebar
-    populateAirportList();
+    populateAirportList(selectedAirports);
 }
 
-// Add markers for all Argentine airports
-function addAirportMarkers() {
-    argentineAirports.forEach((airport, index) => {
+// Add markers for specific airports with origin and destination styling
+function addAirportMarkers(airportsList) {
+    airportsList.forEach((airport, index) => {
+        const isOrigin = airport.icao === originAirport;
+        const isDestination = destinationAirports.includes(airport.icao);
+        
+        // Determine marker color based on airport type
+        let markerColor = '#3498db'; // Default blue
+        
+        if (isOrigin) {
+            markerColor = '#e74c3c'; // Red for origin
+        } else if (isDestination) {
+            markerColor = '#27ae60'; // Green for destinations
+        }
+        
         const marker = new google.maps.Marker({
-            position: { lat: airport.lat, lng: airport.lon }, // Note: using 'lon' from data
+            position: { lat: airport.lat, lng: airport.lon },
             map: map,
             title: `${airport.name} (${airport.icao})`,
             icon: {
                 url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
                     <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="16" cy="16" r="12" fill="#3498db" stroke="#2c3e50" stroke-width="2"/>
+                        <circle cx="16" cy="16" r="12" fill="${markerColor}" stroke="#2c3e50" stroke-width="2"/>
                         <text x="16" y="20" text-anchor="middle" fill="white" font-family="Arial" font-size="10" font-weight="bold">✈</text>
                     </svg>
                 `),
@@ -79,20 +96,58 @@ function addAirportMarkers() {
 
         // Add click event to marker
         marker.addListener('click', () => {
-            showAirportInfo(airport, marker);
+            showAirportInfo(airport, marker, isOrigin, isDestination);
         });
 
         markers.push(marker);
     });
 }
 
+// Draw flight paths from origin to all destinations
+function drawFlightPaths(airportsList) {
+    const origin = airportsList.find(airport => airport.icao === originAirport);
+    
+    if (!origin) {
+        console.warn('Origin airport not found');
+        return;
+    }
+    
+    destinationAirports.forEach(destCode => {
+        const destination = airportsList.find(airport => airport.icao === destCode);
+        
+        if (destination) {
+            const flightPath = new google.maps.Polyline({
+                path: [
+                    { lat: origin.lat, lng: origin.lon },
+                    { lat: destination.lat, lng: destination.lon }
+                ],
+                geodesic: true,
+                strokeColor: '#e74c3c',
+                strokeOpacity: 0.8,
+                strokeWeight: 3
+            });
+            
+            flightPath.setMap(map);
+            flightPaths.push(flightPath);
+        }
+    });
+}
+
 // Show airport information in info window
-function showAirportInfo(airport, marker) {
+function showAirportInfo(airport, marker, isOrigin = false, isDestination = false) {
+    let roleText = '';
+    if (isOrigin) {
+        roleText = '<div style="color: #e74c3c; font-weight: bold;">🛫 Origin Airport</div>';
+    } else if (isDestination) {
+        roleText = '<div style="color: #27ae60; font-weight: bold;">🛬 Destination Airport</div>';
+    }
+    
     const content = `
         <div class="info-window">
             <h4>${airport.name}</h4>
             <div class="icao">${airport.icao}</div>
             <div class="country">${airport.city}, ${airport.state}</div>
+            ${roleText}
         </div>
     `;
 
@@ -101,13 +156,28 @@ function showAirportInfo(airport, marker) {
 }
 
 // Populate the airport list in the sidebar
-function populateAirportList() {
+function populateAirportList(airportsList) {
     const airportList = document.getElementById('airport-list');
     
-    argentineAirports.forEach((airport, index) => {
+    airportsList.forEach((airport, index) => {
+        const isOrigin = airport.icao === originAirport;
+        const isDestination = destinationAirports.includes(airport.icao);
+        
+        let roleIcon = '';
+        let roleClass = '';
+        
+        if (isOrigin) {
+            roleIcon = '🛫 ';
+            roleClass = 'origin-airport';
+        } else if (isDestination) {
+            roleIcon = '🛬 ';
+            roleClass = 'destination-airport';
+        }
+        
         const listItem = document.createElement('li');
+        listItem.className = roleClass;
         listItem.innerHTML = `
-            <div class="airport-name">${airport.name}</div>
+            <div class="airport-name">${roleIcon}${airport.name}</div>
             <div class="airport-icao">${airport.icao}</div>
             <div class="airport-country">${airport.city}, ${airport.state}</div>
         `;
@@ -119,7 +189,7 @@ function populateAirportList() {
             map.setZoom(10);
             
             // Show info window for this airport
-            showAirportInfo(airport, markers[index]);
+            showAirportInfo(airport, markers[index], isOrigin, isDestination);
             
             // Highlight the selected airport in the list
             document.querySelectorAll('.airport-list li').forEach(li => {
