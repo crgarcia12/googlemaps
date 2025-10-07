@@ -15,10 +15,20 @@
         
         <div class="content">
             <div class="airport-list-container">
-                <h3>Airport List</h3>
-                <ul id="airport-list" class="airport-list">
-                    <!-- Airport list will be populated by JavaScript -->
-                </ul>
+                <h3>Flight Routes</h3>
+                <table id="airport-table" class="airport-table">
+                    <thead>
+                        <tr>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Airport Name</th>
+                            <th>Flight Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody id="airport-list">
+                        <!-- Airport routes will be populated by JavaScript -->
+                    </tbody>
+                </table>
             </div>
             
             <div class="map-container">

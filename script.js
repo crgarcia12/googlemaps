@@ -16,7 +16,26 @@ const destinationAirports = [
 'SARL'
 ]; // Destination airport ICAO codes
 
-// Get specific airports by ICAO codes
+// Flight duration data (in minutes) - you can customize these
+const flightDurations = {
+    'SAAR': 45,   // Assumed flight times from SACO
+    'SAOC': 30,
+    'SANL': 90,
+    'SANE': 60,
+    'SARP': 75,
+    'SAOS': 40,
+    'SAOU': 85,
+    'SAMR': 70,
+    'SAZN': 55,
+    'SARL': 65
+};
+
+// Convert minutes to hours:minutes format
+function formatDuration(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}:${mins.toString().padStart(2, '0')}`;
+}
 function getSpecificAirports() {
     if (typeof airports !== 'undefined' && airports.length > 0) {
         const airportsData = airports[0];
@@ -201,58 +220,83 @@ function showAirportInfo(airport, marker, isOrigin = false, isDestination = fals
     infoWindow.open(map, marker);
 }
 
-// Populate the airport list in the sidebar
+// Populate the airport table with flight routes
 function populateAirportList(airportsList) {
-    const airportList = document.getElementById('airport-list');
+    const airportTableBody = document.getElementById('airport-list');
+    const originAirportData = airportsList.find(airport => airport.icao === originAirport);
     
-    airportsList.forEach((airport, index) => {
-        const isOrigin = airport.icao === originAirport;
-        const isDestination = destinationAirports.includes(airport.icao);
-        
-        let roleIcon = '';
-        let roleClass = '';
-        
-        if (isOrigin) {
-            roleIcon = '🛫 ';
-            roleClass = 'origin-airport';
-        } else if (isDestination) {
-            roleIcon = '🛬 ';
-            roleClass = 'destination-airport';
-        }
-        
-        const listItem = document.createElement('li');
-        listItem.className = roleClass;
-        listItem.innerHTML = `
-            <div class="airport-name">${roleIcon}${airport.name}</div>
-            <div class="airport-icao">${airport.icao} - ${airport.city}, ${airport.state}, ${airport.country}</div>
-        `;
+    if (!originAirportData) {
+        console.error('Origin airport not found in data');
+        return;
+    }
 
-        // Add click event to list item
-        listItem.addEventListener('click', () => {
-            // Center map on selected airport
-            map.setCenter({ lat: airport.lat, lng: airport.lon });
-            map.setZoom(10);
+    // Create rows for each destination
+    destinationAirports.forEach((destCode, index) => {
+        const destinationAirport = airportsList.find(airport => airport.icao === destCode);
+        
+        if (destinationAirport) {
+            const duration = flightDurations[destCode] || 0;
+            const formattedDuration = formatDuration(duration);
             
-            // Show info window for this airport
-            showAirportInfo(airport, markers[index], isOrigin, isDestination);
-            
-            // Highlight the selected airport in the list
-            document.querySelectorAll('.airport-list li').forEach(li => {
-                li.style.backgroundColor = '#f8f9fa';
+            const row = document.createElement('tr');
+            row.className = 'airport-row';
+            row.innerHTML = `
+                <td class="origin-cell">
+                    <span class="airport-icon">🛫</span>
+                    ${originAirportData.icao}
+                </td>
+                <td class="destination-cell">
+                    <span class="airport-icon">🛬</span>
+                    ${destinationAirport.icao}
+                </td>
+                <td class="airport-name">
+                    ${destinationAirport.name}
+                    <div class="airport-location">${destinationAirport.city}, ${destinationAirport.state}</div>
+                </td>
+                <td class="duration-cell">
+                    ${formattedDuration}
+                </td>
+            `;
+
+            // Add click event to row
+            row.addEventListener('click', () => {
+                // Find the marker index for this destination
+                const markerIndex = airportsList.findIndex(airport => airport.icao === destCode);
+                if (markerIndex !== -1) {
+                    // Center map on selected airport
+                    map.setCenter({ lat: destinationAirport.lat, lng: destinationAirport.lon });
+                    map.setZoom(10);
+                    
+                    // Show info window for this airport
+                    showAirportInfo(destinationAirport, markers[markerIndex], false, true);
+                    
+                    // Highlight the selected row
+                    document.querySelectorAll('.airport-row').forEach(r => {
+                        r.classList.remove('selected');
+                    });
+                    row.classList.add('selected');
+                }
             });
-            listItem.style.backgroundColor = '#e3f2fd';
-        });
 
-        // Add hover events to highlight airport and routes on map
-        listItem.addEventListener('mouseenter', () => {
-            highlightAirportAndRoutes(airport, index, true);
-        });
+            // Add hover events to highlight airport and routes on map
+            row.addEventListener('mouseenter', () => {
+                const markerIndex = airportsList.findIndex(airport => airport.icao === destCode);
+                if (markerIndex !== -1) {
+                    highlightAirportAndRoutes(destinationAirport, markerIndex, true);
+                    row.classList.add('hover');
+                }
+            });
 
-        listItem.addEventListener('mouseleave', () => {
-            highlightAirportAndRoutes(airport, index, false);
-        });
+            row.addEventListener('mouseleave', () => {
+                const markerIndex = airportsList.findIndex(airport => airport.icao === destCode);
+                if (markerIndex !== -1) {
+                    highlightAirportAndRoutes(destinationAirport, markerIndex, false);
+                    row.classList.remove('hover');
+                }
+            });
 
-        airportList.appendChild(listItem);
+            airportTableBody.appendChild(row);
+        }
     });
 }
 

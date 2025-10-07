@@ -198,3 +198,101 @@ header p {
         height: 300px;
     }
 }
+
+/* Airport table styles */
+.airport-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.airport-table thead {
+    background: #3498db;
+    color: white;
+}
+
+.airport-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.airport-table tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.airport-table tbody tr:hover,
+.airport-table tbody tr.hover {
+    background-color: #f8f9fa;
+    transform: translateX(3px);
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
+}
+
+.airport-table tbody tr.selected {
+    background-color: #e3f2fd;
+    border-left: 4px solid #3498db;
+}
+
+.airport-table td {
+    padding: 12px 15px;
+    vertical-align: top;
+}
+
+.origin-cell, .destination-cell {
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #2c3e50;
+}
+
+.origin-cell .airport-icon {
+    color: #e74c3c;
+    margin-right: 8px;
+}
+
+.destination-cell .airport-icon {
+    color: #27ae60;
+    margin-right: 8px;
+}
+
+.airport-name {
+    font-weight: 600;
+    color: #2c3e50;
+    line-height: 1.4;
+}
+
+.airport-location {
+    font-size: 0.85em;
+    color: #7f8c8d;
+    margin-top: 4px;
+}
+
+.duration-cell {
+    font-weight: bold;
+    color: #3498db;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+    .airport-table {
+        font-size: 0.9em;
+    }
+    
+    .airport-table th,
+    .airport-table td {
+        padding: 8px 10px;
+    }
+    
+    .airport-location {
+        display: none;
+    }
+}
