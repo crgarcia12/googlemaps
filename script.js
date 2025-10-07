@@ -379,8 +379,20 @@ function highlightAirportAndRoutes(airport, markerIndex, highlight) {
     }
 }
 
-// Handle map loading errors
+// Handle map loading errors and animate progress bars
 window.addEventListener('load', () => {
+    // Animate progress bars
+    setTimeout(() => {
+        const progressBars = document.querySelectorAll('.progress-fill');
+        progressBars.forEach(bar => {
+            const percentage = bar.getAttribute('data-percentage');
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = percentage + '%';
+            }, 200);
+        });
+    }, 500);
+    
     // Check if Google Maps API failed to load
     setTimeout(() => {
         if (typeof google === 'undefined') {

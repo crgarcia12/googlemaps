@@ -9,22 +9,58 @@
 <body>
     <div class="container">
         <header>
-            <h1>Flight Route Network</h1>
+            <h1>Reservar Vuelo</h1>
             <p>Origin airport in red, destinations in green, with flight paths connecting them</p>
         </header>
         
         <div class="content">
             <div class="airport-list-container">
-                <h3>Flight Routes</h3>
+                <h3 class="section-title">1. Aeronave Seleccionada</h3>
+                
+                <div class="aircraft-section">
+                    <div class="aircraft-image-container">
+                        <img src="https://sur-air.com/img/flota/LV-MEC.jpg" alt="Aeronave Seleccionada" class="aircraft-image">
+                        <div class="aircraft-info">
+                            <h4>LV-MEC</h4>
+                            <p>Beechcraft King Air 350</p>
+                        </div>
+                    </div>
+                    
+                    <div class="aircraft-status-container">
+                        <h4>Estado de la Aeronave</h4>
+                        <div class="status-item">
+                            <label>Landing Gear</label>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-percentage="90"></div>
+                                <span class="progress-text">90%</span>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <label>Engine</label>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-percentage="70"></div>
+                                <span class="progress-text">70%</span>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <label>Fuel Level</label>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-percentage="85"></div>
+                                <span class="progress-text">85%</span>
+                            </div>
+                        </div>
+                        <div class="status-item">
+                            <label>Hydraulics</label>
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-percentage="95"></div>
+                                <span class="progress-text">95%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="section-title">2. Destinos disponibles en la aeronave seleccionada</h3>
                 <table id="airport-table" class="airport-table">
-                    <thead>
-                        <tr>
-                            <th>Origin</th>
-                            <th>Destination</th>
-                            <th>Airport Name</th>
-                            <th>Flight Duration</th>
-                        </tr>
-                    </thead>
                     <tbody id="airport-list">
                         <!-- Airport routes will be populated by JavaScript -->
                     </tbody>
