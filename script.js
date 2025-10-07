@@ -2,8 +2,19 @@
 // Show specific airports with origin and destinations
 
 // Configuration for airports and routes
-const originAirport = 'SAAV'; // Origin airport ICAO code
-const destinationAirports = ['SABE', 'SUMU', 'SACO', 'SAAR']; // Destination airport ICAO codes
+const originAirport = 'SACO'; // Origin airport ICAO code
+const destinationAirports = [
+'SAAR',
+'SAOC',
+'SANL',
+'SANE',
+'SARP',
+'SAOS',
+'SAOU',
+'SAMR',
+'SAZN',
+'SARL'
+]; // Destination airport ICAO codes
 
 // Get specific airports by ICAO codes
 function getSpecificAirports() {
@@ -31,10 +42,8 @@ function initMap() {
     // Get specific airports
     const selectedAirports = getSpecificAirports();
     
-    // Create map centered on South America
+    // Create map with initial settings
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 4,
-        center: { lat: -15.0, lng: -60.0 }, // Centered on South America
         mapTypeId: 'terrain',
         styles: [
             {
@@ -59,8 +68,45 @@ function initMap() {
     // Draw flight paths from origin to destinations
     drawFlightPaths(selectedAirports);
 
+    // Fit map to show all airports
+    fitMapToAirports(selectedAirports);
+
     // Populate airport list in sidebar
     populateAirportList(selectedAirports);
+}
+
+// Fit the map view to show all airports
+function fitMapToAirports(airportsList) {
+    if (airportsList.length === 0) {
+        // Fallback to default view if no airports
+        map.setCenter({ lat: -15.0, lng: -60.0 });
+        map.setZoom(4);
+        return;
+    }
+    
+    if (airportsList.length === 1) {
+        // If only one airport, center on it with reasonable zoom
+        const airport = airportsList[0];
+        map.setCenter({ lat: airport.lat, lng: airport.lon });
+        map.setZoom(8);
+        return;
+    }
+    
+    // Create bounds object to include all airports
+    const bounds = new google.maps.LatLngBounds();
+    
+    // Add each airport to the bounds
+    airportsList.forEach(airport => {
+        bounds.extend(new google.maps.LatLng(airport.lat, airport.lon));
+    });
+    
+    // Fit the map to the bounds with some padding
+    map.fitBounds(bounds, {
+        top: 50,
+        right: 50,
+        bottom: 50,
+        left: 50
+    });
 }
 
 // Add markers for specific airports with origin and destination styling
@@ -178,8 +224,7 @@ function populateAirportList(airportsList) {
         listItem.className = roleClass;
         listItem.innerHTML = `
             <div class="airport-name">${roleIcon}${airport.name}</div>
-            <div class="airport-icao">${airport.icao}</div>
-            <div class="airport-country">${airport.city}, ${airport.state}</div>
+            <div class="airport-icao">${airport.icao} - ${airport.city}, ${airport.state}, ${airport.country}</div>
         `;
 
         // Add click event to list item

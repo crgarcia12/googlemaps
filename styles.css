@@ -39,22 +39,19 @@ header p {
 
 .content {
     display: flex;
+    flex-direction: column;
     gap: 20px;
-    height: 70vh;
-    min-height: 500px;
 }
 
-/* Sidebar styles */
-.sidebar {
-    flex: 0 0 300px;
+/* Airport list container styles */
+.airport-list-container {
     background: white;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    overflow-y: auto;
 }
 
-.sidebar h3 {
+.airport-list-container h3 {
     color: #2c3e50;
     margin-bottom: 15px;
     font-size: 1.3em;
@@ -64,6 +61,7 @@ header p {
 
 .airport-list {
     list-style: none;
+    display: block;
 }
 
 .airport-list li {
@@ -78,7 +76,7 @@ header p {
 
 .airport-list li:hover {
     background: #e3f2fd;
-    transform: translateX(5px);
+    transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
     transition: all 0.3s ease;
 }
@@ -124,11 +122,11 @@ header p {
 
 /* Map container styles */
 .map-container {
-    flex: 1;
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     overflow: hidden;
+    height: 600px;
 }
 
 #map {
@@ -162,21 +160,16 @@ header p {
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .content {
-        flex-direction: column;
-        height: auto;
+    .airport-list {
+        display: block;
     }
     
-    .sidebar {
-        flex: none;
-        max-height: 200px;
-        order: 2;
+    .airport-list li {
+        margin-bottom: 10px;
     }
     
     .map-container {
-        flex: none;
         height: 400px;
-        order: 1;
     }
     
     header h1 {
@@ -197,7 +190,11 @@ header p {
         font-size: 1.7em;
     }
     
-    .sidebar {
+    .airport-list-container {
         padding: 15px;
+    }
+    
+    .map-container {
+        height: 300px;
     }
 }
